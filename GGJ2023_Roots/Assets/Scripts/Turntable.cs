@@ -15,6 +15,7 @@ public class Turntable: MonoBehaviour
     public float RotationDampForce = 20;
     private bool IsRotating;
     public float RotationSpeed;
+    public float MaxRotationSpeed = 180;
 
     //Panning
     public Transform LookTarget;
@@ -56,22 +57,20 @@ public class Turntable: MonoBehaviour
     void Update()
     {
         bool startRot = Input.GetMouseButtonDown(0);
-        bool startPan = Input.GetMouseButtonDown(2);
+        bool startPan = Input.GetMouseButtonDown(1);
+
         if (startRot  || startPan)
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out var hit, 100) && hit.collider.CompareTag("world"))
-            {
-                IsRotating = startRot;
-                IsPanning = startPan; 
-                MouseClickPoint = Input.mousePosition;
-            }
+            IsRotating = startRot;
+            IsPanning = startPan; 
+            MouseClickPoint = Input.mousePosition;            
         }
+
         if (Input.GetMouseButtonUp(0))
         {
             IsRotating = false;
         }
-        if (Input.GetMouseButtonUp(2))
+        if (Input.GetMouseButtonUp(1))
         {
             IsPanning = false;
         }
@@ -79,7 +78,7 @@ public class Turntable: MonoBehaviour
         if (IsRotating || IsPanning)
         {
             var mouseOffset = (Input.mousePosition - MouseClickPoint);
-            RotationSpeed = IsRotating ? -(mouseOffset.x + mouseOffset.y) * RotateSensitivity : RotationSpeed;
+            RotationSpeed = Math.Clamp(IsRotating ? -(mouseOffset.x + mouseOffset.y) * RotateSensitivity : RotationSpeed, -MaxRotationSpeed, MaxRotationSpeed);
             PanningSpeed = IsPanning ? -((Vector2)mouseOffset) * PanningSensitivity : PanningSpeed;
             MouseClickPoint = Input.mousePosition;
         }
