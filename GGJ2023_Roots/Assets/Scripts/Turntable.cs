@@ -19,7 +19,7 @@ public class Turntable: MonoBehaviour
     //Panning
     public Transform LookTarget;
     public float PanningSensitivity = 0.4f;
-    public float PanningDampForce = 3;
+    public float PanningDampForce = 1.5f;
     private bool IsPanning;
     private Vector2 PanningSpeed;
     public Vector2 panningBounds = new Vector2(-3, 3);
