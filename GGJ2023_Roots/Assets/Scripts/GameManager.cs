@@ -1,3 +1,4 @@
+using Cinemachine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,6 +6,8 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class GameManager : MonoBehaviour
 {
@@ -30,6 +33,11 @@ public class GameManager : MonoBehaviour
 
     public State Menu, Playing, Pause;
 
+    [SerializeField]
+    private CinemachineVirtualCamera mainCam, menuCam;
+    [SerializeField]
+    private RawImage logo;
+
     private void Awake()
     {
         stateMachine = new StateMachine("stateMachine");
@@ -41,6 +49,7 @@ public class GameManager : MonoBehaviour
         stateMachine.AddTransition(Menu, Playing, () => true);
         stateMachine.AddTransition(Playing, Menu, () => true);
         stateMachine.AddTransition(Playing, Pause, () => true);
+        stateMachine.AddTransition(Pause, Playing, () => true);
 
         Menu.onEnter = () => MenuOnEnter();
         Menu.onExit = () => MenuOnExit();
@@ -52,7 +61,7 @@ public class GameManager : MonoBehaviour
         if (SceneManager.GetActiveScene().buildIndex == 0)
         {
             //  Change this in final build to state -> Menu
-            stateMachine.SetInitialState(Playing);
+            stateMachine.SetInitialState(Menu);
         }
 
         if (SceneManager.GetActiveScene().buildIndex == 1)
@@ -66,20 +75,31 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         DontDestroyOnLoad(this.gameObject);
+
     }
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.P))
+        if (stateMachine.GetState() == Playing) { 
+            if (Input.GetKeyDown(KeyCode.P))
+            {
+                if (GetGamePausedStatus() == false)
+                {
+                    PauseGame();
+                }
+                else
+                {
+                    ResumeGame();
+                }
+            }
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                stateMachine.MakeTransition(Menu);
+            }
+        }
+        else if(stateMachine.GetState() == Menu && Input.GetMouseButtonDown(0))
         {
-            if(GetGamePausedStatus() == false)
-            {
-                PauseGame();
-            }
-            else
-            {
-                ResumeGame();
-            }
+            stateMachine.MakeTransition(Playing);
         }
     }
 
@@ -95,14 +115,42 @@ public class GameManager : MonoBehaviour
 
     private void MenuOnEnter()
     {
-
+        menuCam.enabled = true;
+        mainCam.enabled = false;
+        StartCoroutine(ToggleLogo(false));
     }
 
     private void MenuOnExit()
     {
-
+        mainCam.enabled = true;
+        menuCam.enabled = false;
+        StartCoroutine(ToggleLogo(true));
     }
-
+    private IEnumerator ToggleLogo(bool fadeOut)
+    {
+        // fade from opaque to transparent
+        if (fadeOut)
+        {
+            // loop over 1 second backwards
+            for (float i = 1; i >= 0; i -= Time.deltaTime)
+            {
+                // set color with i as alpha
+                logo.color = new Color(1, 1, 1, i);
+                yield return null;
+            }
+        }
+        // fade from transparent to opaque
+        else
+        {
+            // loop over 1 second
+            for (float i = 0; i <= 1; i += Time.deltaTime)
+            {
+                // set color with i as alpha
+                logo.color = new Color(1, 1, 1, i);
+                yield return null;
+            }
+        }
+    }
     private void PauseOnEnter()
     {
 

@@ -24,6 +24,7 @@ public class Turntable: MonoBehaviour
     private bool IsPanning;
     private Vector2 PanningSpeed;
     public Vector2 panningBounds = new Vector2(-3, 3);
+    private float MaxPanningSpeed = 2;
 
 
     //Zoom
@@ -80,6 +81,8 @@ public class Turntable: MonoBehaviour
             var mouseOffset = (Input.mousePosition - MouseClickPoint);
             RotationSpeed = Math.Clamp(IsRotating ? -(mouseOffset.x + mouseOffset.y) * RotateSensitivity : RotationSpeed, -MaxRotationSpeed, MaxRotationSpeed);
             PanningSpeed = IsPanning ? -((Vector2)mouseOffset) * PanningSensitivity : PanningSpeed;
+            PanningSpeed.x = Math.Clamp(PanningSpeed.x, -MaxPanningSpeed, MaxPanningSpeed);
+            PanningSpeed.y = Math.Clamp(PanningSpeed.y, -MaxPanningSpeed, MaxPanningSpeed);
             MouseClickPoint = Input.mousePosition;
         }
 
