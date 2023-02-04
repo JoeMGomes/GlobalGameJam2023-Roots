@@ -5066,7 +5066,6 @@ GameObject:
   m_Component:
   - component: {fileID: 187322010}
   - component: {fileID: 187322009}
-  - component: {fileID: 187322011}
   m_Layer: 0
   m_Name: Island
   m_TagString: world
@@ -5113,29 +5112,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 22.895, z: 0}
---- !u!114 &187322011
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 187322008}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 39995d259cd62eb4d97845c55ff9f274, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  YOfsset: 0
-  RotateSensitivity: 10
-  RotationDampForce: 20
-  RotationSpeed: 0
-  LookTarget: {fileID: 1013929466}
-  PanningSensitivity: 0.4
-  PanningDampForce: 3
-  panningBounds: {x: -3, y: 3}
-  cam: {fileID: 848841658}
-  ZoomSpeed: 3
-  ZoomSensitivity: 10
 --- !u!1001 &312235430
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6795,6 +6771,7 @@ GameObject:
   - component: {fileID: 1674418638}
   - component: {fileID: 1674418637}
   - component: {fileID: 1674418636}
+  - component: {fileID: 1674418640}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -6901,6 +6878,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1674418640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1674418635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e5f457663b42b8469066e5b150bc23b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1690223306 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4497740004937625751, guid: 629607feab9223248a0cdfeb6e298d23,
