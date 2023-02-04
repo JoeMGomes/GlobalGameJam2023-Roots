@@ -8,18 +8,28 @@ using UnityEngine.EventSystems;
 
 public class Turntable: MonoBehaviour
 {
+    private Vector3 MouseClickPoint;
+
     //Rotation
     public float RotateSensitivity = 10; 
-    public float ZoomSensitivity = 10; 
-    public float DampForce = 20;
-    private Vector3 MouseClickPoint;
+    public float RotationDampForce = 20;
     private bool IsRotating;
     public float RotationSpeed;
 
+    //Panning
+    public Transform LookTarget;
+    public float PanningSensitivity = 0.4f;
+    public float PanningDampForce = 3;
+    private bool IsPanning;
+    private Vector2 PanningSpeed;
+    public Vector2 panningBounds = new Vector2(-3, 3);
+
+
     //Zoom
     public CinemachineVirtualCamera cam;
-    public CinemachineTrackedDolly CamDolly;
+    private CinemachineTrackedDolly CamDolly;
     public float ZoomSpeed = 3f;
+    public float ZoomSensitivity = 10;
 
     void Start()
     {
@@ -35,51 +45,82 @@ public class Turntable: MonoBehaviour
         {
             Debug.LogError("VIRTUAL CAMERA HAS NO DOLLY TRACK");
         }
+
+        if(LookTarget == null)
+            Debug.LogError("LOOK TARGET IS NULL");
+
     }
 
     void Update()
     {
-        if (IsRotating)
+        bool startRot = Input.GetMouseButtonDown(0);
+        bool startPan = Input.GetMouseButtonDown(2);
+        if (startRot  || startPan)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out var hit, 100) && hit.collider.CompareTag("world"))
+            {
+                IsRotating = startRot;
+                IsPanning = startPan; 
+                MouseClickPoint = Input.mousePosition;
+            }
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+            IsRotating = false;
+        }
+        if (Input.GetMouseButtonUp(2))
+        {
+            IsPanning = false;
+        }
+
+        if (IsRotating || IsPanning)
         {
             var mouseOffset = (Input.mousePosition - MouseClickPoint);
-
-            RotationSpeed = -(mouseOffset.x + mouseOffset.y) * RotateSensitivity;
-
+            RotationSpeed = IsRotating ? -(mouseOffset.x + mouseOffset.y) * RotateSensitivity : RotationSpeed;
+            PanningSpeed = IsPanning ? -((Vector2)mouseOffset) * PanningSensitivity : PanningSpeed;
             MouseClickPoint = Input.mousePosition;
         }
 
-
         if(RotationSpeed > 0)
-            RotationSpeed -= DampForce * Time.deltaTime;
+            RotationSpeed -= RotationDampForce * Time.deltaTime;
         else
-            RotationSpeed += DampForce * Time.deltaTime;
+            RotationSpeed += RotationDampForce * Time.deltaTime;
 
         if (Mathf.Abs(RotationSpeed) < 0.3)
             RotationSpeed = 0;
 
-        transform.Rotate( 0, RotationSpeed * Time.deltaTime,0 );
+        if (PanningSpeed.x > 0)
+        {
+            PanningSpeed.x -= PanningDampForce * Time.deltaTime;
+        }
+        else
+        {
+            PanningSpeed.x += PanningDampForce * Time.deltaTime;
+        }
+
+        if (PanningSpeed.y > 0)
+        {
+            PanningSpeed.y -= PanningDampForce * Time.deltaTime;
+        }
+        else
+        {
+            PanningSpeed.y += PanningDampForce * Time.deltaTime;
+        }
+
+        if (Mathf.Abs(PanningSpeed.magnitude) < 0.1)
+            PanningSpeed = Vector2.zero;
+
+
+        transform.Rotate( 0, RotationSpeed * Time.deltaTime,0);
 
         CamDolly.m_PathPosition += Input.mouseScrollDelta.y * ZoomSensitivity * Time.deltaTime;
         CamDolly.m_PathPosition = Mathf.Clamp(CamDolly.m_PathPosition, 0, 1);
-    }
 
-    void OnMouseDown()
-    {
+        CamDolly.m_PathOffset.y += PanningSpeed.y * PanningSensitivity * Time.deltaTime;
+        CamDolly.m_PathOffset.y = Mathf.Clamp(CamDolly.m_PathOffset.y, panningBounds.x, panningBounds.y);
 
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out var hit, 100) && hit.collider.CompareTag("world"))
-        {
-            IsRotating = true;
-            MouseClickPoint = Input.mousePosition;
-            Debug.Log(hit.transform.name);
-            Debug.Log("hit");
-        }
-
-    }
-
-    void OnMouseUp()
-    {
-        IsRotating = false;
+        LookTarget.position = new Vector3(Mathf.Clamp(cam.LookAt.position.x + PanningSpeed.x * PanningSensitivity * Time.deltaTime,-3,3), LookTarget.position.y, LookTarget.position.z);
     }
 
 }
