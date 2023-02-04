@@ -301,6 +301,7 @@ MonoBehaviour:
   mainCam: {fileID: 848841658}
   menuCam: {fileID: 1339810426}
   logo: {fileID: 1190019995}
+  ToolsObject: {fileID: 1545358058}
 --- !u!4 &58614332
 Transform:
   m_ObjectHideFlags: 0
