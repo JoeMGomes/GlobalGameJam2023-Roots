@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
 {
     public float playerDamageOverTime;
 
+    public float treeLifeTime;
+
     private bool gameIsPaused;
 
     private static GameManager _gameManager;
@@ -40,6 +42,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     private GameObject ToolsObject;
+
+    public TreeController tree;
 
     private void Awake()
     {
@@ -83,7 +87,13 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (stateMachine.GetState() == Playing) { 
+        if (stateMachine.GetState() == Playing) {
+            
+            if(tree.GetIsTransitioning)
+            {
+                treeLifeTime += Time.deltaTime;
+            }
+
             if (Input.GetKeyDown(KeyCode.P))
             {
                 if (GetGamePausedStatus() == false)

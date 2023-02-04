@@ -42,6 +42,10 @@ public class TreeController : MonoBehaviour
 
     private Action growMethod;
 
+    private bool isTransitioning;
+
+    public bool GetIsTransitioning => isTransitioning;
+
     private void Awake()
     {
         stateMachine = new StateMachine(name);
@@ -60,24 +64,28 @@ public class TreeController : MonoBehaviour
 
         seed.onEnter = () =>
         {
+            isTransitioning = false;
             animator.Play(seedAnimHash);
             growMethod = TransitionToYoung;
         };
 
         youngNormal.onEnter = () =>
         {
+            isTransitioning = false;
             animator.Play(youngNormalAnimHash);
             growMethod = TransitionToAdult;
         };
 
         adultNormal.onEnter = () =>
         {
+            isTransitioning = false;
             animator.Play(adultNormalAnimHash);
             growMethod = TransitionToOld;
         };
 
         oldNormal.onEnter = () =>
         {
+            isTransitioning = false;
             animator.Play(oldNormalAnimHash);
         };
 
@@ -170,6 +178,7 @@ public class TreeController : MonoBehaviour
     [ContextMenu("Transition To Young")]
     public void TransitionToYoung()
     {
+        isTransitioning = true;
         transition.onEnter = () => StartCoroutine(TransitionToYoungCoroutine());
         transition.onEnter += () => Debug.Log("Transition State In");
         transition.onExit += () => Debug.Log("Transition State Out");
@@ -188,6 +197,7 @@ public class TreeController : MonoBehaviour
     [ContextMenu("Transition To Adult")]
     public void TransitionToAdult()
     {
+        isTransitioning = true;
         transition.onEnter = () => StartCoroutine(TransitionToAdultCoroutine());
         transition.onEnter += () => Debug.Log("Transition State In");
         transition.onExit += () => Debug.Log("Transition State Out");
@@ -206,6 +216,7 @@ public class TreeController : MonoBehaviour
     [ContextMenu("Transition To Old")]
     public void TransitionToOld()
     {
+        isTransitioning = true;
         transition.onEnter = () => StartCoroutine(TransitionToOldCoroutine());
         transition.onEnter += () => Debug.Log("Transition State In");
         transition.onExit += () => Debug.Log("Transition State Out");
@@ -220,5 +231,4 @@ public class TreeController : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         stateMachine.MakeTransition(oldNormal);
     }
-
 }

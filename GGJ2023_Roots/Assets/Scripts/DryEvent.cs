@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class InsectEvent : Event
+public class DryEvent : Event
 {
     private void Start()
     {

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 287698435354481091}
   - component: {fileID: 8316033271256770514}
+  - component: {fileID: 3440062623033878629}
   m_Layer: 0
   m_Name: InsectEvent
   m_TagString: Untagged
@@ -47,7 +48,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lifetime: 10
   health: 100
-  hover: 0
+--- !u!65 &3440062623033878629
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1030702694508703733}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.5, y: 1.5, z: 1.5}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3530149712664399945
 GameObject:
   m_ObjectHideFlags: 0
@@ -59,7 +72,6 @@ GameObject:
   - component: {fileID: 8639649485536166550}
   - component: {fileID: 8468805793057711710}
   - component: {fileID: 54747621722583952}
-  - component: {fileID: 5563879066550290982}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -132,16 +144,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &5563879066550290982
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3530149712664399945}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}

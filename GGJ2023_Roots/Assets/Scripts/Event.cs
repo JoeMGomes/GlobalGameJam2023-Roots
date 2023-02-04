@@ -8,19 +8,17 @@ public class Event : MonoBehaviour
     //Event parameters
     public float lifetime;
     public float health;
-    public bool hover;
+    protected bool hover;
     public Action InstantiateOnEnd;
 
     private void Update()
     {
-        lifetime -= Time.deltaTime; 
-        Debug.Log(lifetime);
+        lifetime -= Time.deltaTime;
         if (lifetime < 0)
         {
             OnEndEvent();
         }
     }
-
     public virtual void OnStartEvent()
     {
 
@@ -35,7 +33,6 @@ public class Event : MonoBehaviour
     public virtual void TakeDamage()
     {
         health -= (Time.deltaTime * GameManager.GetGameManagerInstance().playerDamageOverTime);
-        Debug.Log("health");
 
         if(health < 0)
         {
@@ -43,7 +40,7 @@ public class Event : MonoBehaviour
         }
     }
 
-    void OnMouseEnter()
+    private void OnMouseEnter()
     {
         hover = true;
     }
