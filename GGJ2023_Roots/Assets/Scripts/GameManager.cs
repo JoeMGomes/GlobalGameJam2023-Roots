@@ -38,6 +38,9 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private RawImage logo;
 
+    [SerializeField]
+    private GameObject ToolsObject;
+
     private void Awake()
     {
         stateMachine = new StateMachine("stateMachine");
@@ -105,7 +108,7 @@ public class GameManager : MonoBehaviour
 
     private void PlayOnEnter()
     {
-        
+        ToolsObject.SetActive(true);
     }
 
     private void PlayOnExit()
@@ -118,6 +121,7 @@ public class GameManager : MonoBehaviour
         menuCam.enabled = true;
         mainCam.enabled = false;
         StartCoroutine(ToggleLogo(false));
+        ToolsObject.SetActive(false);
     }
 
     private void MenuOnExit()
