@@ -299,11 +299,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RotateSensitivity: 10
-  DampForce: 30
+  RotationDampForce: 20
   RotationSpeed: 0
-  PanningSensitivity: 10
+  LookTarget: {fileID: 1013929466}
+  PanningSensitivity: 0.4
+  PanningDampForce: 3
+  panningBounds: {x: -3, y: 3}
   cam: {fileID: 848841658}
-  CamDolly: {fileID: 0}
   ZoomSpeed: 3
   ZoomSensitivity: 10
 --- !u!1 &742163109
@@ -451,7 +453,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 742163109}
-  m_LocalRotation: {x: 0.123043574, y: -0.046488203, z: -0.012031111, w: 0.99123883}
+  m_LocalRotation: {x: 0.12217748, y: -0.048718985, z: 0.006004021, w: 0.99129367}
   m_LocalPosition: {x: 0.6580113, y: 4.779659, z: -6.478155}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -483,15 +485,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 848841656}
-  m_LocalRotation: {x: 0.123043574, y: -0.046488203, z: -0.012031111, w: 0.99123883}
-  m_LocalPosition: {x: 24.592342, y: 3.2610018, z: -13.178085}
+  m_LocalRotation: {x: 0.12217748, y: -0.048718985, z: 0.006004021, w: 0.99129367}
+  m_LocalPosition: {x: 24.592342, y: 3.2610018, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1119644283}
   m_Father: {fileID: 0}
   m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 19.431, y: -1.523, z: 0}
+  m_LocalEulerAnglesHint: {x: 14.053, y: -5.627, z: 0}
 --- !u!114 &848841658
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -614,7 +616,7 @@ MonoBehaviour:
   m_XDamping: 0
   m_YDamping: 0
   m_ZDamping: 1
-  m_CameraUp: 0
+  m_CameraUp: 4
   m_PitchDamping: 0
   m_YawDamping: 0
   m_RollDamping: 0
