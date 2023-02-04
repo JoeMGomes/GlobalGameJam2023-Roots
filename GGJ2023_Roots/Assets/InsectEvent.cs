@@ -6,6 +6,7 @@ using UnityEngine;
 public class InsectEvent : Event
 {
     private float elapsedTime;
+    private bool hoverEvent;
 
     private void Start()
     {
@@ -14,11 +15,29 @@ public class InsectEvent : Event
 
     private void Update()
     {
-        elapsedTime -= Time.deltaTime;
+        elapsedTime += Time.deltaTime;
 
-        if (elapsedTime < this.lifetime)
+        if (elapsedTime > this.lifetime)
         {
             OnEndEvent();
+        }
+    }
+
+    void OnMouseEnter()
+    {
+        hoverEvent = true;
+    }
+
+    private void OnMouseExit()
+    {
+        hoverEvent = false;
+    }
+
+    private void OnMouseDrag()
+    {
+        if(hoverEvent)
+        {
+            TakeDamage();
         }
     }
 
@@ -32,5 +51,10 @@ public class InsectEvent : Event
         // Behaviour code here before destroy
 
         base.OnEndEvent();
+    }
+
+    public override void TakeDamage()
+    {
+        base.TakeDamage();
     }
 }
