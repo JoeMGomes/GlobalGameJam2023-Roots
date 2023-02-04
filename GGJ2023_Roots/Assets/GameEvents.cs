@@ -18,25 +18,12 @@ public class GameEvents : MonoBehaviour
     IEnumerator InstantiateEvent(float duration)
     {
         yield return new WaitForSeconds(instantiateDelay);
-        int id = Random.Range(0, eventList.Count - 1);
-        int id2 = Random.Range(0, positionsList.Count - 1);
-        Instantiate(eventList[id], positionsList[id2]);
+        if(eventList.Count > 0)
+        {
+            int id = Random.Range(0, eventList.Count - 1);
+            int id2 = Random.Range(0, positionsList.Count - 1);
+            Instantiate(eventList[id], positionsList[id2]);
+        }
         yield break;
-    }
-}
-
-public class Event : MonoBehaviour
-{
-    //Event parameters
-    public float lifetime;
-
-    public virtual void OnStartEvent()
-    {
-
-    }
-
-    public virtual void OnEndEvent()
-    {
-        Destroy(this);
     }
 }

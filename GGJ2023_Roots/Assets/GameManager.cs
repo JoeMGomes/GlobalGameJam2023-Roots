@@ -3,12 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    private static GameManager instance;
+    public float playerDamageOverTime;
 
-    private static GameManager Instance
+    public static GameManager instance;
+
+    public static GameManager Instance
     {
         get
         {
@@ -29,8 +32,30 @@ public class GameManager : MonoBehaviour
 
     public Gamestate gamestate;
 
+    public Gamestate GetCurrentGamestate()
+    {
+        Gamestate state = gamestate;
+        return state;
+    }
+
+    public void SetCurrentGamestate(Gamestate state)
+    {
+        gamestate = state;
+    }
+
     private void Awake()
     {
+        if (SceneManager.GetActiveScene().buildIndex == 0)
+        {
+            SetCurrentGamestate(Gamestate.Menu);
+        }
+        else if(SceneManager.GetActiveScene().buildIndex == 1)
+        {
+            SetCurrentGamestate(Gamestate.Playing);
+        }
+
+        Debug.Log("Current Gamestate: " + GetCurrentGamestate());
+
         InitializeGameManager();
     }
 
