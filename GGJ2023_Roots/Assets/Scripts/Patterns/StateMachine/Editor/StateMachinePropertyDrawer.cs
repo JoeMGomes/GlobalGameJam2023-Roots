@@ -14,8 +14,6 @@ public class StateMachinePropertyDrawer : PropertyDrawer
 
         EditorGUI.BeginProperty(position, label, property);
         
-        EditorUtils.DrawUILine(Color.gray, 1);
-        
         EditorGUILayout.Space();
         
         GUIStyle headerStyle = new GUIStyle("BoldLabel");
@@ -35,8 +33,6 @@ public class StateMachinePropertyDrawer : PropertyDrawer
 
         EditorGUILayout.Space();
         EditorGUILayout.Space();
-        
-        EditorUtils.DrawUILine(Color.gray, 1);
         
         EditorGUILayout.Space();
 
