@@ -9,7 +9,7 @@ using UnityEngine.EventSystems;
 public class Turntable: MonoBehaviour
 {
     private Vector3 MouseClickPoint;
-
+    public float YOfsset;
     //Rotation
     public float RotateSensitivity = 10; 
     public float RotationDampForce = 20;
@@ -48,6 +48,8 @@ public class Turntable: MonoBehaviour
 
         if(LookTarget == null)
             Debug.LogError("LOOK TARGET IS NULL");
+
+        YOfsset = LookTarget.position.y;
 
     }
 
@@ -117,10 +119,9 @@ public class Turntable: MonoBehaviour
         CamDolly.m_PathPosition += Input.mouseScrollDelta.y * ZoomSensitivity * Time.deltaTime;
         CamDolly.m_PathPosition = Mathf.Clamp(CamDolly.m_PathPosition, 0, 1);
 
-        CamDolly.m_PathOffset.y += PanningSpeed.y * PanningSensitivity * Time.deltaTime;
-        CamDolly.m_PathOffset.y = Mathf.Clamp(CamDolly.m_PathOffset.y, panningBounds.x, panningBounds.y);
-
-        LookTarget.position = new Vector3(Mathf.Clamp(cam.LookAt.position.x + PanningSpeed.x * PanningSensitivity * Time.deltaTime,-3,3), LookTarget.position.y, LookTarget.position.z);
+        LookTarget.position = new Vector3(Mathf.Clamp(LookTarget.position.x + PanningSpeed.x * PanningSensitivity * Time.deltaTime, panningBounds.x, panningBounds.y),
+                                          Mathf.Clamp(LookTarget.position.y + PanningSpeed.y * PanningSensitivity * Time.deltaTime, panningBounds.x + YOfsset, panningBounds.y + YOfsset),
+                                          LookTarget.position.z);
     }
 
 }
