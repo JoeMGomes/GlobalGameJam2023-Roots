@@ -56,8 +56,8 @@ public class Turntable: MonoBehaviour
 
     void Update()
     {
-        bool startRot = Input.GetMouseButtonDown(0);
-        bool startPan = Input.GetMouseButtonDown(1);
+        bool startRot = Input.GetMouseButtonDown(1);
+        bool startPan = Input.GetMouseButtonDown(2);
 
         if (startRot  || startPan)
         {
@@ -66,11 +66,11 @@ public class Turntable: MonoBehaviour
             MouseClickPoint = Input.mousePosition;            
         }
 
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(1))
         {
             IsRotating = false;
         }
-        if (Input.GetMouseButtonUp(1))
+        if (Input.GetMouseButtonUp(2))
         {
             IsPanning = false;
         }
