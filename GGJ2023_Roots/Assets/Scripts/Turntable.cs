@@ -1,39 +1,55 @@
+using Cinemachine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst.CompilerServices;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class Turntable: MonoBehaviour
 {
-    private float Sensitivity = 5; 
-    private Vector3 _mouseReference;
-    private Vector3 _mouseOffset;
-    private bool _isRotating;
-
+    //Rotation
+    public float RotateSensitivity = 10; 
+    public float ZoomSensitivity = 10; 
+    public float DampForce = 20;
+    private Vector3 MouseClickPoint;
+    private bool IsRotating;
     public float RotationSpeed;
-    public float DampForce = 75;
 
-    public Vector2 FOVBounds = new Vector2(30, 90);
+    //Zoom
+    public CinemachineVirtualCamera cam;
+    public CinemachineTrackedDolly CamDolly;
     public float ZoomSpeed = 3f;
 
     void Start()
     {
         RotationSpeed = 0;
+        if(cam == null)
+        {
+            Debug.LogError("NO VIRTUAL CAMERA SELECT FOR TURNTABLE");
+        }
+
+        CamDolly = cam.GetCinemachineComponent<CinemachineTrackedDolly>();
+
+        if(CamDolly == null)
+        {
+            Debug.LogError("VIRTUAL CAMERA HAS NO DOLLY TRACK");
+        }
     }
 
     void Update()
     {
-        if (_isRotating)
+        if (IsRotating)
         {
-            _mouseOffset = (Input.mousePosition - _mouseReference);
+            var mouseOffset = (Input.mousePosition - MouseClickPoint);
 
-            RotationSpeed = -(_mouseOffset.x + _mouseOffset.y) * Sensitivity;
+            RotationSpeed = -(mouseOffset.x + mouseOffset.y) * RotateSensitivity;
 
-            _mouseReference = Input.mousePosition;
+            MouseClickPoint = Input.mousePosition;
         }
 
 
-        if(RotationSpeed> 0)
+        if(RotationSpeed > 0)
             RotationSpeed -= DampForce * Time.deltaTime;
         else
             RotationSpeed += DampForce * Time.deltaTime;
@@ -43,20 +59,27 @@ public class Turntable: MonoBehaviour
 
         transform.Rotate( 0, RotationSpeed * Time.deltaTime,0 );
 
-        Camera.main.fieldOfView += Input.mouseScrollDelta.y * ZoomSpeed * Time.deltaTime;
-
-        Camera.main.fieldOfView = Mathf.Clamp(Camera.main.fieldOfView, FOVBounds.x, FOVBounds.y);
+        CamDolly.m_PathPosition += Input.mouseScrollDelta.y * ZoomSensitivity * Time.deltaTime;
+        CamDolly.m_PathPosition = Mathf.Clamp(CamDolly.m_PathPosition, 0, 1);
     }
 
     void OnMouseDown()
     {
-        _isRotating = true;
-        _mouseReference = Input.mousePosition;
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out var hit, 100) && hit.collider.CompareTag("world"))
+        {
+            IsRotating = true;
+            MouseClickPoint = Input.mousePosition;
+            Debug.Log(hit.transform.name);
+            Debug.Log("hit");
+        }
+
     }
 
     void OnMouseUp()
     {
-        _isRotating = false;
+        IsRotating = false;
     }
 
 }
