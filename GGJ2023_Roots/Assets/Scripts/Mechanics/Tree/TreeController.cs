@@ -205,6 +205,11 @@ public class TreeController : MonoBehaviour
         stateMachine.AddTransition(youngNormal, youngPlague);
         stateMachine.AddTransition(youngPlague, youngNormal);
 
+        stateMachine.AddTransition(transition, youngPlague);
+        stateMachine.AddTransition(transition, youngDry);
+        stateMachine.AddTransition(youngPlague, transition);
+        stateMachine.AddTransition(youngDry, transition);
+
         //Young to Adult
         stateMachine.AddTransition(youngNormal, transition);
         stateMachine.AddTransition(transition, adultNormal);
@@ -215,15 +220,26 @@ public class TreeController : MonoBehaviour
         stateMachine.AddTransition(adultNormal, adultPlague);
         stateMachine.AddTransition(adultPlague, adultNormal);
 
+        stateMachine.AddTransition(transition, adultPlague);
+        stateMachine.AddTransition(transition, adultDry);
+        stateMachine.AddTransition(adultPlague, transition);
+        stateMachine.AddTransition(adultDry, transition);
+
         //Adult to Old
         stateMachine.AddTransition(adultNormal, transition);
         stateMachine.AddTransition(transition, oldNormal);
+        stateMachine.AddTransition(oldNormal, transition);
 
         //Old Tree
         stateMachine.AddTransition(oldNormal, oldDry);
         stateMachine.AddTransition(oldDry, oldNormal);
         stateMachine.AddTransition(oldNormal, oldPlague);
         stateMachine.AddTransition(oldPlague, oldNormal);
+
+        stateMachine.AddTransition(transition, oldPlague);
+        stateMachine.AddTransition(transition, oldDry);
+        stateMachine.AddTransition(oldPlague, transition);
+        stateMachine.AddTransition(oldDry, transition);
 
         //Initial State
         stateMachine.SetInitialState(init);

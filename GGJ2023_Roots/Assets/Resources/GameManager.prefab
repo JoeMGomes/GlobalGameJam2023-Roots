@@ -46,6 +46,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerDamageOverTime: 20
+  treeDamageOverTime: 20
+  treeHealth: 100
+  treeSeedGrowTime: 5
+  treeYoungGrowTime: 30
+  treeAdultGrowTime: 60
+  tree: {fileID: 0}
+  gameEvents: {fileID: 0}
   stateMachine:
     states: []
     ownerName: 
@@ -59,6 +66,10 @@ MonoBehaviour:
   Pause:
     name: 
     isActive: 0
+  mainCam: {fileID: 0}
+  menuCam: {fileID: 0}
+  logo: {fileID: 0}
+  ToolsObject: {fileID: 0}
 --- !u!114 &9061867693880473606
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75,5 +86,4 @@ MonoBehaviour:
   maxInstantiateDelay: 5
   eventList:
   - {fileID: 1030702694508703733, guid: d5b972a80eb65e441a944c250f86147f, type: 3}
-  - {fileID: 4492014715804848052, guid: e00b96bc10eae2c449da776180fe929f, type: 3}
   positionsList: []

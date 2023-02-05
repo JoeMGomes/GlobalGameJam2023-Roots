@@ -2,8 +2,8 @@ using Cinemachine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEditor;
+using UnityEditor.Tilemaps;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -12,14 +12,16 @@ using UnityEngine.UIElements;
 public class GameManager : MonoBehaviour
 {
     public float playerDamageOverTime;
+    public float treeDamageOverTime;
+    public float treeHealth;
+    public float treeSeedGrowTime;
     public float treeYoungGrowTime;
     public float treeAdultGrowTime;
-    public float treeOldGrowTime;
 
     private float treeLifetime;
-
-    public float treeHealth;
     public TreeController tree;
+    public GameEvents gameEvents;
+    public AudioSource audioSource;
 
     private static GameManager _gameManager;
     public static GameManager GetGameManagerInstance
@@ -43,6 +45,8 @@ public class GameManager : MonoBehaviour
     private RawImage logo;
     [SerializeField]
     private GameObject ToolsObject;
+
+    private Event currentHoveredEvent;
 
     private void Awake()
     {
@@ -75,6 +79,8 @@ public class GameManager : MonoBehaviour
             stateMachine.SetInitialState(Playing);
         }
 
+        gameEvents = gameObject.GetComponent<GameEvents>();
+
         InitializeGameManager();
     }
 
@@ -97,13 +103,53 @@ public class GameManager : MonoBehaviour
         {
             if (tree.GetIsTransitioning == false)
             {
-                treeYoungGrowTime += Time.deltaTime;
+                treeLifetime += Time.deltaTime;
 
-                if (tree.stateMachine.GetState() == tree.youngNormal)
+                if(treeHealth < 0)
+                {
+                    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                }
+
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                if (Physics.Raycast(ray, out var hit, 10000, LayerMask.NameToLayer("Tools")))
+                {
+                    if(hit.collider.GetComponent<Event>())
+                    {
+                        if (hit.collider.GetComponent<Event>() != currentHoveredEvent)
+                        {
+                            currentHoveredEvent = hit.collider.GetComponent<Event>();
+                        }
+                    }
+                    else
+                    {
+                        currentHoveredEvent = null;
+                    }
+                }
+
+                if(Input.GetMouseButton(0))
+                {
+                    if (currentHoveredEvent != null)
+                    {
+                        currentHoveredEvent.TakeDamage();
+                    }
+                }
+                if (tree.stateMachine.GetState() == tree.seed)
+                {
+                    if (treeLifetime >= treeSeedGrowTime)
+                    {
+                        treeLifetime = 0;
+                        gameEvents.InstantiateEvent();
+                        Debug.Log("Grew");
+                        tree.Grow();
+                    }
+                }
+                else if (tree.stateMachine.GetState() == tree.youngNormal)
                 {
                     if (treeLifetime >= treeYoungGrowTime)
                     {
                         treeLifetime = 0;
+                        gameEvents.InstantiateEvent();
+                        Debug.Log("Grew");
                         tree.Grow();
                     }
                 }
@@ -112,16 +158,15 @@ public class GameManager : MonoBehaviour
                     if (treeLifetime >= treeAdultGrowTime)
                     {
                         treeLifetime = 0;
+                        gameEvents.InstantiateEvent();
+                        Debug.Log("Grew");
                         tree.Grow();
                     }
                 }
-                else if (tree.stateMachine.GetState() == tree.oldNormal)
+
+                else if (tree.stateMachine.GetState() == tree.youngPlague || tree.stateMachine.GetState() == tree.adultPlague || tree.stateMachine.GetState() == tree.oldPlague)
                 {
-                    if (treeLifetime >= treeOldGrowTime)
-                    {
-                        treeLifetime = 0;
-                        tree.Grow();
-                    }
+                    treeHealth -= (Time.deltaTime * treeDamageOverTime);
                 }
             }
                 
@@ -149,6 +194,7 @@ public class GameManager : MonoBehaviour
 
     private void MenuOnEnter()
     {
+        audioSource.Play();
         menuCam.enabled = true;
         mainCam.enabled = false;
         StartCoroutine(ToggleLogo(false));
@@ -192,6 +238,7 @@ public class GameManager : MonoBehaviour
     private void PlayOnEnter()
     {
         ToolsObject.SetActive(true);
+        tree.Init();
     }
 
     private void PlayOnExit()
