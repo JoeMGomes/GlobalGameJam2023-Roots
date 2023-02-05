@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEditor.Tilemaps;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -22,6 +21,7 @@ public class GameManager : MonoBehaviour
     public TreeController tree;
     public GameEvents gameEvents;
     public AudioSource audioSource;
+    public Event currentHoveredEvent;
 
     private static GameManager _gameManager;
     public static GameManager GetGameManagerInstance
@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameObject ToolsObject;
 
-    private Event currentHoveredEvent;
+    public bool instanced;
 
     private void Awake()
     {
@@ -103,7 +103,25 @@ public class GameManager : MonoBehaviour
         {
             if (tree.GetIsTransitioning == false)
             {
-                treeLifetime += Time.deltaTime;
+                if(tree.stateMachine.GetState() == tree.seed)
+                {
+                    treeLifetime += Time.deltaTime;
+                    if(treeLifetime > treeSeedGrowTime)
+                    {
+                        treeLifetime = 0;
+                        Debug.Log("Grew");
+                        tree.Grow();
+                    }
+                }
+
+                if(tree.stateMachine.GetState() == tree.youngNormal || tree.stateMachine.GetState() == tree.adultNormal || tree.stateMachine.GetState() == tree.oldNormal)
+                {
+                    if(instanced == false)
+                    {
+                        gameEvents.InstantiateEvent();
+                    }
+                    treeLifetime += Time.deltaTime;
+                }
 
                 if(treeHealth < 0)
                 {
@@ -133,17 +151,8 @@ public class GameManager : MonoBehaviour
                         currentHoveredEvent.TakeDamage();
                     }
                 }
-                if (tree.stateMachine.GetState() == tree.seed)
-                {
-                    if (treeLifetime >= treeSeedGrowTime)
-                    {
-                        treeLifetime = 0;
-                        gameEvents.InstantiateEvent();
-                        Debug.Log("Grew");
-                        tree.Grow();
-                    }
-                }
-                else if (tree.stateMachine.GetState() == tree.youngNormal)
+
+                if (tree.stateMachine.GetState() == tree.youngNormal)
                 {
                     if (treeLifetime >= treeYoungGrowTime)
                     {
@@ -206,6 +215,7 @@ public class GameManager : MonoBehaviour
         mainCam.enabled = true;
         menuCam.enabled = false;
         StartCoroutine(ToggleLogo(true));
+        tree.Init();
     }
     private IEnumerator ToggleLogo(bool fadeOut)
     {
@@ -238,7 +248,6 @@ public class GameManager : MonoBehaviour
     private void PlayOnEnter()
     {
         ToolsObject.SetActive(true);
-        tree.Init();
     }
 
     private void PlayOnExit()
@@ -276,4 +285,5 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 1;
     }
+
 }

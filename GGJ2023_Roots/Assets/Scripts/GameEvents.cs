@@ -2,7 +2,6 @@ using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Tracing;
-using UnityEditorInternal;
 using UnityEngine;
 
 public class GameEvents : MonoBehaviour
@@ -16,6 +15,7 @@ public class GameEvents : MonoBehaviour
 
     public void InstantiateEvent()
     {
+        GameManager.GetGameManagerInstance.instanced = true;
         instantiateDelay = Random.Range(minInstantiateDelay, maxInstantiateDelay);
         StartCoroutine(CreateEvent(instantiateDelay));
     }
@@ -39,6 +39,7 @@ public class GameEvents : MonoBehaviour
                     instance = Instantiate(eventList[id], GameManager.GetGameManagerInstance.tree.transform);
                 }
                 instance.GetComponent<Event>().tree = GameManager.GetGameManagerInstance.tree;
+                GameManager.GetGameManagerInstance.instanced = false;
                 instance.GetComponent<Event>().InstantiateOnEnd = () => CanInstantiate();
             }
         }

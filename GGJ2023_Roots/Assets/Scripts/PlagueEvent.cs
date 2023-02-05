@@ -24,6 +24,7 @@ public class PlagueEvent : Event
         tree.TransitionToNormal();
         _emission.rateOverTime = 0;
         tree.StopPlagueParticleSystem();
+        GameManager.GetGameManagerInstance.currentHoveredEvent = null;
         base.OnEndEvent();
     }
 
