@@ -27,10 +27,12 @@ public class TreeController : MonoBehaviour
 
     //Young Dry
     private readonly int youngNormalToDryAnimHash = Animator.StringToHash("YoungNormalToDry");
+    private readonly int youngDryAnimHash = Animator.StringToHash("YoungDry");
     private readonly int youngDryToNormalAnimHash = Animator.StringToHash("YoungDryToNormal");
 
     //Young Plague
     private readonly int youngNormalToPlagueAnimHash = Animator.StringToHash("YoungNormalToPlague");
+    private readonly int youngPlagueAnimHash = Animator.StringToHash("YoungPlague");
     private readonly int youngPlagueToNormalAnimHash = Animator.StringToHash("YoungPlagueToNormal");
 
     //Young To Adult
@@ -38,10 +40,12 @@ public class TreeController : MonoBehaviour
 
     //Adult Dry
     private readonly int adultNormalToDryAnimHash = Animator.StringToHash("AdultNormalToDry");
+    private readonly int adultDryAnimHash = Animator.StringToHash("AdultDry");
     private readonly int adultDryToNormalAnimHash = Animator.StringToHash("AdultDryToNormal");
 
     //Adult Plague
     private readonly int adultNormalToPlagueAnimHash = Animator.StringToHash("AdultNormalToPlague");
+    private readonly int adultPlagueAnimHash = Animator.StringToHash("AdultPlague");
     private readonly int adultPlagueToNormalAnimHash = Animator.StringToHash("AdultPlagueToNormal");
 
     //Adult To Old
@@ -49,10 +53,12 @@ public class TreeController : MonoBehaviour
 
     //Adult Dry
     private readonly int oldNormalToDryAnimHash = Animator.StringToHash("OldNormalToDry");
+    private readonly int oldDryAnimHash = Animator.StringToHash("OldDry");
     private readonly int oldDryToNormalAnimHash = Animator.StringToHash("OldDryToNormal");
 
     //Adult Plague
     private readonly int oldNormalToPlagueAnimHash = Animator.StringToHash("OldNormalToPlague");
+    private readonly int oldPlagueAnimHash = Animator.StringToHash("OldPlague");
     private readonly int oldPlagueToNormalAnimHash = Animator.StringToHash("OldPlagueToNormal");
 
     public StateMachine stateMachine;
@@ -64,11 +70,11 @@ public class TreeController : MonoBehaviour
     public State oldNormal, oldDry, oldPlague;
 
     private Action growTransitionMethod;
-    private Action normalTransitionMethod;
     private Action dryTransitionMethod;
     private Action plagueTransitionMethod;
-    
-    
+    private Action normalTransitionMethod;
+
+
 
     private bool isTransitioning;
 
@@ -114,9 +120,9 @@ public class TreeController : MonoBehaviour
             animator.Play(youngNormalAnimHash);
             UpdateMesh();
             growTransitionMethod = TransitionToAdult;
-            dryTransitionMethod = () => StartCoroutine(YoungDryCoroutine());
+            dryTransitionMethod = () => StartCoroutine(YoungDryCoroutine());           
             plagueTransitionMethod = () => StartCoroutine(YoungPlagueCoroutine());
-            normalTransitionMethod = () => StartCoroutine(YoungPlagueToNormalCoroutine());
+
         };
 
         adultNormal.onEnter = () =>
@@ -127,7 +133,6 @@ public class TreeController : MonoBehaviour
             growTransitionMethod = TransitionToOld;
             dryTransitionMethod = () => StartCoroutine(AdultDryCoroutine());
             plagueTransitionMethod = () => StartCoroutine(AdultPlagueCoroutine());
-            normalTransitionMethod = () => StartCoroutine(AdultPlagueToNormalCoroutine());
         };
 
         oldNormal.onEnter = () =>
@@ -137,6 +142,53 @@ public class TreeController : MonoBehaviour
             UpdateMesh();
             dryTransitionMethod = () => StartCoroutine(OldDryCoroutine());
             plagueTransitionMethod = () => StartCoroutine(OldPlagueCoroutine());
+        };
+
+        youngDry.onEnter = () =>
+        {
+            isTransitioning = false;
+            animator.Play(youngDryAnimHash);
+            UpdateMesh();
+            normalTransitionMethod = () => StartCoroutine(YoungDryToNormalCoroutine());
+        };
+
+        adultDry.onEnter = () =>
+        {
+            isTransitioning = false;
+            animator.Play(adultDryAnimHash);
+            UpdateMesh();
+            normalTransitionMethod = () => StartCoroutine(AdultDryToNormalCoroutine());
+        };
+
+        oldDry.onEnter = () =>
+        {
+            isTransitioning = false;
+            animator.Play(oldDryAnimHash);
+            UpdateMesh();
+            normalTransitionMethod = () => StartCoroutine(OldDryToNormalCoroutine());
+        };
+
+        youngPlague.onEnter = () =>
+        {
+            isTransitioning = false;
+            animator.Play(youngPlagueAnimHash);
+            UpdateMesh();
+            normalTransitionMethod = () => StartCoroutine(YoungPlagueToNormalCoroutine());
+        };
+
+        adultPlague.onEnter = () =>
+        {
+            isTransitioning = false;
+            animator.Play(adultPlagueAnimHash);
+            UpdateMesh();
+            normalTransitionMethod = () => StartCoroutine(AdultPlagueToNormalCoroutine());
+        };
+
+        oldPlague.onEnter = () =>
+        {
+            isTransitioning = false;
+            animator.Play(oldPlagueAnimHash);
+            UpdateMesh();
             normalTransitionMethod = () => StartCoroutine(OldPlagueToNormalCoroutine());
         };
 
@@ -313,6 +365,7 @@ public class TreeController : MonoBehaviour
 
     public void TransitionToDry()
     {
+        isTransitioning = true;
         transition.onEnter = () => dryTransitionMethod?.Invoke();
         transition.onEnter += () => Debug.Log("Transition State In");
         transition.onExit += () => Debug.Log("Transition State Out");
@@ -321,6 +374,7 @@ public class TreeController : MonoBehaviour
 
     public void TransitionToPlague()
     {
+        isTransitioning = true;
         transition.onEnter = () => plagueTransitionMethod?.Invoke();
         transition.onEnter += () => Debug.Log("Transition State In");
         transition.onExit += () => Debug.Log("Transition State Out");
@@ -329,6 +383,7 @@ public class TreeController : MonoBehaviour
 
     public void TransitionToNormal()
     {
+        isTransitioning = true;
         transition.onEnter = () => normalTransitionMethod?.Invoke();
         transition.onEnter += () => Debug.Log("Transition State In");
         transition.onExit += () => Debug.Log("Transition State Out");
@@ -355,16 +410,16 @@ public class TreeController : MonoBehaviour
 
     IEnumerator YoungPlagueCoroutine()
     {
-        animator.Play(youngNormalToDryAnimHash);
+        animator.Play(youngNormalToPlagueAnimHash);
         yield return new WaitForSeconds(0.1f);
         yield return new WaitWhile(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1);
         yield return new WaitForSeconds(0.1f);
-        stateMachine.MakeTransition(youngDry);
+        stateMachine.MakeTransition(youngPlague);
     }
 
     IEnumerator YoungPlagueToNormalCoroutine()
     {
-        animator.Play(youngDryToNormalAnimHash);
+        animator.Play(youngPlagueToNormalAnimHash);
         yield return new WaitForSeconds(0.1f);
         yield return new WaitWhile(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1);
         yield return new WaitForSeconds(0.1f);
@@ -391,16 +446,16 @@ public class TreeController : MonoBehaviour
 
     IEnumerator AdultPlagueCoroutine()
     {
-        animator.Play(adultNormalToDryAnimHash);
+        animator.Play(adultNormalToPlagueAnimHash);
         yield return new WaitForSeconds(0.1f);
         yield return new WaitWhile(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1);
         yield return new WaitForSeconds(0.1f);
-        stateMachine.MakeTransition(adultDry);
+        stateMachine.MakeTransition(adultPlague);
     }
 
     IEnumerator AdultPlagueToNormalCoroutine()
     {
-        animator.Play(adultDryToNormalAnimHash);
+        animator.Play(adultPlagueToNormalAnimHash);
         yield return new WaitForSeconds(0.1f);
         yield return new WaitWhile(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1);
         yield return new WaitForSeconds(0.1f);
@@ -427,16 +482,16 @@ public class TreeController : MonoBehaviour
 
     IEnumerator OldPlagueCoroutine()
     {
-        animator.Play(oldNormalToDryAnimHash);
+        animator.Play(oldNormalToPlagueAnimHash);
         yield return new WaitForSeconds(0.1f);
         yield return new WaitWhile(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1);
         yield return new WaitForSeconds(0.1f);
-        stateMachine.MakeTransition(oldDry);
+        stateMachine.MakeTransition(oldPlague);
     }
 
     IEnumerator OldPlagueToNormalCoroutine()
     {
-        animator.Play(oldDryToNormalAnimHash);
+        animator.Play(oldPlagueToNormalAnimHash);
         yield return new WaitForSeconds(0.1f);
         yield return new WaitWhile(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1);
         yield return new WaitForSeconds(0.1f);
