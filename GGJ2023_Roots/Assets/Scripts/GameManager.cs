@@ -99,7 +99,7 @@ public class GameManager : MonoBehaviour
             {
                 treeYoungGrowTime += Time.deltaTime;
 
-                if (tree.GetCurrentState == tree.youngNormal)
+                if (tree.stateMachine.GetState() == tree.youngNormal)
                 {
                     if (treeLifetime >= treeYoungGrowTime)
                     {
@@ -107,7 +107,7 @@ public class GameManager : MonoBehaviour
                         tree.Grow();
                     }
                 }
-                else if (tree.GetCurrentState == tree.adultNormal)
+                else if (tree.stateMachine.GetState() == tree.adultNormal)
                 {
                     if (treeLifetime >= treeAdultGrowTime)
                     {
@@ -115,7 +115,7 @@ public class GameManager : MonoBehaviour
                         tree.Grow();
                     }
                 }
-                else if (tree.GetCurrentState == tree.oldNormal)
+                else if (tree.stateMachine.GetState() == tree.oldNormal)
                 {
                     if (treeLifetime >= treeOldGrowTime)
                     {
@@ -222,13 +222,11 @@ public class GameManager : MonoBehaviour
 
     public void PauseGame()
     {
-        gameIsPaused = true;
         Time.timeScale = 0;
     }
 
     public void ResumeGame()
     {
-        gameIsPaused = false;
         Time.timeScale = 1;
     }
 }
