@@ -28,6 +28,11 @@ public class ToolsController : MonoBehaviour
 
         audioSource = GetComponent<AudioSource>();
         StartCoroutine(SetTool(SelectedIndex));
+
+        foreach(var tool in AvailableTools)
+        {
+            tool.Init();
+        }
     }
 
     // Update is called once per frame
@@ -50,12 +55,21 @@ public class ToolsController : MonoBehaviour
 
         if(Input.GetMouseButtonDown(0))
         {
-            SelectedTool.UseTool();
-            audioSource.PlayOneShot(SelectedTool.GetRandomAudio());
+            SelectedTool.StartUseTool();
+            audioSource.clip = SelectedTool.GetRandomAudio();
+            audioSource.loop = true;
+            audioSource.Play();
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {
+            SelectedTool.StopUseTool();
+            audioSource.Stop();
+
         }
 
+
 #if UNITY_EDITOR
-        if(Input.GetKeyDown(KeyCode.A)) {
+        if (Input.GetKeyDown(KeyCode.A)) {
             SelectedIndex = (SelectedIndex + 1) % AvailableTools.Length;
             StartCoroutine(SetTool(SelectedIndex));
         }

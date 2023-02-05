@@ -13,12 +13,11 @@ MonoBehaviour:
   m_Name: Regador
   m_EditorClassIdentifier: 
   Name: Regador
-  toolPrefab: {fileID: 919132149155446097, guid: 8280fb3cbb494b145995db8dd2a51ef3,
+  toolPrefab: {fileID: 6492744093387386013, guid: bd32de1772015ea49831fc08ba25a1c1,
     type: 3}
-  InitRotation: {x: 180, y: 90, z: 0}
-  AudioSource: {fileID: 0}
+  InitRotation: {x: 0, y: 90, z: 0}
   audioClips:
-  - {fileID: 8300000, guid: ca191f4b4fa6fd24ebd482118ffda81c, type: 3}
-  - {fileID: 8300000, guid: 888952f94873caa40877b624294e3da6, type: 3}
-  - {fileID: 8300000, guid: ff467da5543ab0244bfdd4d7342b0b91, type: 3}
-  - {fileID: 8300000, guid: 9704761691943414692bb434d313235d, type: 3}
+  - {fileID: 8300000, guid: 94c32c7540eb6b0408a0d5dc187d77d0, type: 3}
+  - {fileID: 8300000, guid: 294dca4e5c2e96e4eace9c72f3ed0b43, type: 3}
+  - {fileID: 8300000, guid: 17deca9b41a46624fa1cd976a85da5b6, type: 3}
+  EffectsPS: {fileID: 0}
