@@ -18,6 +18,7 @@ public class TreeController : MonoBehaviour
 
     //Tree State Animations
     private readonly int seedAnimHash = Animator.StringToHash("Seed");
+    private readonly int seedInAnimHash = Animator.StringToHash("SeedIn");
     private readonly int youngNormalAnimHash = Animator.StringToHash("YoungNormal");
     private readonly int adultNormalAnimHash = Animator.StringToHash("AdultNormal");
     private readonly int oldNormalAnimHash = Animator.StringToHash("OldNormal");
@@ -102,7 +103,7 @@ public class TreeController : MonoBehaviour
 
         init.onEnter = () =>
         {
-            StartCoroutine(Init());
+            animator.Play(seedAnimHash);
             growTransitionMethod = null;
         };
 
@@ -354,9 +355,16 @@ public class TreeController : MonoBehaviour
         stateMachine.MakeTransition(oldNormal);
     }
 
-    IEnumerator Init()
+    public void Init()
     {
-        animator.Play(seedAnimHash);
+        StartCoroutine(InitCoroutine());
+    }
+
+    IEnumerator InitCoroutine()
+    {
+        animator.Play(seedInAnimHash);
+        yield return new WaitForSeconds(0.1f);
+        yield return new WaitWhile(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1);
         yield return new WaitForSeconds(0.1f);
         UpdateMesh();
         stateMachine.MakeTransition(seed);
