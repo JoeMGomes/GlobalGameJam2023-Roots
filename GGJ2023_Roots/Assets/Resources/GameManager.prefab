@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &9061867693880473601
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9061867693880473607}
+  - component: {fileID: 9061867693880473600}
+  - component: {fileID: 9061867693880473606}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9061867693880473607
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9061867693880473601}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.4932662, y: -3.1795254, z: 3.3144379}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9061867693880473600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9061867693880473601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dba86f5a3d57a34dbb735be81cf7080, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerDamageOverTime: 20
+  stateMachine:
+    states: []
+    ownerName: 
+    debug: 0
+  Menu:
+    name: 
+    isActive: 0
+  Playing:
+    name: 
+    isActive: 0
+  Pause:
+    name: 
+    isActive: 0
+--- !u!114 &9061867693880473606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9061867693880473601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f93e06ff5e81384fbff7d9c082b8e5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minInstantiateDelay: 3
+  maxInstantiateDelay: 5
+  eventList:
+  - {fileID: 1030702694508703733, guid: d5b972a80eb65e441a944c250f86147f, type: 3}
+  - {fileID: 4492014715804848052, guid: e00b96bc10eae2c449da776180fe929f, type: 3}
+  positionsList: []
