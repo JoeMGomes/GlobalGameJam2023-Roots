@@ -12,14 +12,17 @@ using UnityEngine.UIElements;
 public class GameManager : MonoBehaviour
 {
     public float playerDamageOverTime;
+    public float treeYoungGrowTime;
+    public float treeAdultGrowTime;
+    public float treeOldGrowTime;
 
-    public float treeLifeTime;
+    private float treeLifetime;
 
-    private bool gameIsPaused;
+    public float treeHealth;
+    public TreeController tree;
 
     private static GameManager _gameManager;
-
-    private static GameManager Instance
+    public static GameManager GetGameManagerInstance
     {
         get
         {
@@ -32,18 +35,14 @@ public class GameManager : MonoBehaviour
     }
 
     public StateMachine stateMachine;
-
     public State Menu, Playing, Pause;
 
     [SerializeField]
     private CinemachineVirtualCamera mainCam, menuCam;
     [SerializeField]
     private RawImage logo;
-
     [SerializeField]
     private GameObject ToolsObject;
-
-    public TreeController tree;
 
     private void Awake()
     {
@@ -82,48 +81,70 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         DontDestroyOnLoad(this.gameObject);
-
     }
-
+    
     private void Update()
     {
-        if (stateMachine.GetState() == Playing) {
-            
-            if(tree.GetIsTransitioning)
+        if(stateMachine.GetState() == Menu)
+        {
+            if (Input.GetMouseButtonDown(0))
             {
-                treeLifeTime += Time.deltaTime;
+                stateMachine.MakeTransition(Playing);
             }
+        }
 
+        else if(stateMachine.GetState() == Playing)
+        {
+            if (tree.GetIsTransitioning == false)
+            {
+                treeYoungGrowTime += Time.deltaTime;
+
+                if (tree.GetCurrentState == tree.youngNormal)
+                {
+                    if (treeLifetime >= treeYoungGrowTime)
+                    {
+                        treeLifetime = 0;
+                        tree.Grow();
+                    }
+                }
+                else if (tree.GetCurrentState == tree.adultNormal)
+                {
+                    if (treeLifetime >= treeAdultGrowTime)
+                    {
+                        treeLifetime = 0;
+                        tree.Grow();
+                    }
+                }
+                else if (tree.GetCurrentState == tree.oldNormal)
+                {
+                    if (treeLifetime >= treeOldGrowTime)
+                    {
+                        treeLifetime = 0;
+                        tree.Grow();
+                    }
+                }
+            }
+                
             if (Input.GetKeyDown(KeyCode.P))
             {
-                if (GetGamePausedStatus() == false)
-                {
-                    PauseGame();
-                }
-                else
-                {
-                    ResumeGame();
-                }
+                stateMachine.MakeTransition(Pause);
+                PauseGame();
             }
+
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 stateMachine.MakeTransition(Menu);
             }
         }
-        else if(stateMachine.GetState() == Menu && Input.GetMouseButtonDown(0))
+
+        else if(stateMachine.GetState() == Pause)
         {
-            stateMachine.MakeTransition(Playing);
+            if(Input.GetKeyDown(KeyCode.P))
+            {
+                stateMachine.MakeTransition(Playing);
+                ResumeGame();
+            }
         }
-    }
-
-    private void PlayOnEnter()
-    {
-        ToolsObject.SetActive(true);
-    }
-
-    private void PlayOnExit()
-    {
-
     }
 
     private void MenuOnEnter()
@@ -152,10 +173,12 @@ public class GameManager : MonoBehaviour
                 logo.color = new Color(1, 1, 1, i);
                 yield return null;
             }
+            logo.enabled = false;
         }
         // fade from transparent to opaque
         else
         {
+            logo.enabled = true;
             // loop over 1 second
             for (float i = 0; i <= 1; i += Time.deltaTime)
             {
@@ -164,6 +187,16 @@ public class GameManager : MonoBehaviour
                 yield return null;
             }
         }
+    }
+
+    private void PlayOnEnter()
+    {
+        ToolsObject.SetActive(true);
+    }
+
+    private void PlayOnExit()
+    {
+
     }
     private void PauseOnEnter()
     {
@@ -197,15 +230,5 @@ public class GameManager : MonoBehaviour
     {
         gameIsPaused = false;
         Time.timeScale = 1;
-    }
-
-    public bool GetGamePausedStatus()
-    {
-        return gameIsPaused;
-    }
-
-    public static GameManager GetGameManagerInstance()
-    {
-        return _gameManager;
     }
 }

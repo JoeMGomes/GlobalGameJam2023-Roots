@@ -29,7 +29,7 @@ public class GameEvents : MonoBehaviour
     IEnumerator CreateEvent(float duration)
     {
         yield return new WaitForSeconds(instantiateDelay);
-        if(eventList.Count > 0)
+        if(eventList.Count > 0 && positionsList.Count > 0)
         {
             int id = Random.Range(0, eventList.Count - 1);
             int id2 = Random.Range(0, positionsList.Count - 1);

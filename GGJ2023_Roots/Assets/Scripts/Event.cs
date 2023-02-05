@@ -32,7 +32,7 @@ public class Event : MonoBehaviour
 
     public virtual void TakeDamage()
     {
-        health -= (Time.deltaTime * GameManager.GetGameManagerInstance().playerDamageOverTime);
+        health -= (Time.deltaTime * GameManager.GetGameManagerInstance.playerDamageOverTime);
 
         if(health < 0)
         {
