@@ -7,15 +7,12 @@ public class TreeController : MonoBehaviour
 {
     public Animator animator;
     public SkinnedMeshRenderer treeSkinnedMeshRenderer;
-    MaterialPropertyBlock treeNormalMpb;
-    MaterialPropertyBlock treeUnhealthyMpb;
     private MeshCollider treeMeshcollider;
     private Mesh treeMesh;
     public SkinnedMeshRenderer leavesSkinnedMeshRenderer;
-    MaterialPropertyBlock leavesNormalMpb;
-    MaterialPropertyBlock leavesUnhealthyMpb;
     private MeshCollider leavesMeshCollider;
     private Mesh leavesMesh;
+    public ParticleSystem plagueParticleSystem;
 
     //Animation Hashes
 
@@ -444,5 +441,15 @@ public class TreeController : MonoBehaviour
         yield return new WaitWhile(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1);
         yield return new WaitForSeconds(0.1f);
         stateMachine.MakeTransition(oldNormal);
+    }
+
+    public void StartPlagueParticles()
+    {
+        plagueParticleSystem.Play();
+    }
+
+    public void StopPlagueParticleSystem()
+    {
+        plagueParticleSystem.Stop();
     }
 }
